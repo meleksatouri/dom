@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Shopping Cart</title>
+  <link rel="stylesheet" href="css.css">
+</head>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+  const cartItems = document.getElementsByClassName("item");
+  const totalPriceElement = document.getElementById("total-price");
+
+  function updateTotalPrice() {
+    let totalPrice = 0;
+    for (let i = 0; i < cartItems.length; i++) {
+      const item = cartItems[i];
+      const price = parseFloat(item.getElementsByClassName("item-price")[0].textContent.slice(1));
+      const quantity = parseInt(item.getElementsByClassName("item-quantity")[0].textContent);
+      totalPrice += price * quantity;
+    }
+    totalPriceElement.textContent = totalPrice.toFixed(2);
+  }
+
+  function updateItemQuantity(item, newQuantity) {
+    item.getElementsByClassName("item-quantity")[0].textContent = newQuantity;
+    updateTotalPrice();
+  }
+
+  function decrementQuantity(item) {
+    const currentQuantity = parseInt(item.getElementsByClassName("item-quantity")[0].textContent);
+    if (currentQuantity > 1) {
+      updateItemQuantity(item, currentQuantity - 1);
+    }
+  }
+
+  function incrementQuantity(item) {
+    const currentQuantity = parseInt(item.getElementsByClassName("item-quantity")[0].textContent);
+    updateItemQuantity(item, currentQuantity + 1);
+  }
+
+  function deleteItem(item) {
+    item.remove();
+    updateTotalPrice();
+  }
+
+  function toggleLike(item) {
+    const likeButton = item.getElementsByClassName("like-btn")[0];
+    likeButton.classList.toggle("liked");
+  }
+
+  for (let i = 0; i < cartItems.length; i++) {
+    const item = cartItems[i];
+    const decrementButton = item.getElementsByClassName("decrement-btn")[0];
+    const incrementButton = item.getElementsByClassName("increment-btn")[0];
+    const deleteButton = item.getElementsByClassName("delete-btn")[0];
+    const likeButton = item.getElementsByClassName("like-btn")[0];
+
+    decrementButton.addEventListener("click", function() {
+      decrementQuantity(item);
+    });
+
+    incrementButton.addEventListener("click", function() {
+      incrementQuantity(item);
+    });
+
+    deleteButton.addEventListener("click", function() {
+      deleteItem(item);
+    });
+
+    likeButton.addEventListener("click", function() {
+      toggleLike(item);
+    });
+  }
+
+  updateTotalPrice();
+});
+
+</script>
+<body>
+  <div id="cart">
+    <div class="item">
+      <span class="item-name">T-shirt</span>
+      <span class="item-price">$15</span>
+      <button class="decrement-btn">-</button>
+      <span class="item-quantity">2</span>
+      <button class="increment-btn">+</button>
+      <button class="delete-btn">Delete</button>
+      <button class="like-btn">Like</button>
+    </div>
+
+    <!-- Add more items here -->
+  </div>
+
+  <p>Total Price: $<span id="total-price">0</span></p>
+
+  <script src="script.js"></script>
+</body>
+</html>
